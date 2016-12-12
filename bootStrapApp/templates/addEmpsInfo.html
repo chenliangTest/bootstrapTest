@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {#    <link href="{% static 'bootstrap/css/bootstrap.css' %}" type="text/css" rel="stylesheet">#}
+    {#    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet">#}
+    {#    <link href="{% static 'bootstrap/css/login.css' %}" type="text/css" rel="stylesheet">#}
+    {#    <link href="{% static 'bootstrap/css/jquery-confirm.min.css' %}" type="text/css" rel="stylesheet">#}
+    {#    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.js' %}"></script>#}
+    {#    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'bootstrap/js/jquery-3.1.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/jquery-confirm.min.js' %}"></script>
+    {#    <script type="text/javascript" src="{% static 'bootstrap/js/custom/table.js' %}"></script>#}
+    <script type="text/javascript">
+        $(function () {
+            $('#addButton').click(function () {
+                data = $('form').serialize()
+                empno = $('#empno').val()
+                ename = $('#ename').val()
+                job = $('#job').val()
+                mgr = $('#mgr').val()
+                hiredate = $('#hiredate').val()
+                sal = $('#sal').val()
+                comm = $('#comm').val()
+                deptno = $('#deptno').val()
+                csrfmiddlewaretoken = $('.csrfmiddlewaretoken').val()
+                $.ajax({
+                    type: 'POST',
+                    url: '/insertEmpsInfo/',
+                    data: {
+                        data: data,
+                        empno: empno,
+                        ename: ename,
+                        job: job,
+                        mgr: mgr,
+                        hiredate: hiredate,
+                        sal: sal,
+                        comm: comm,
+                        deptno: deptno,
+                        {#post提交需添加此处#}
+                        csrfmiddlewaretoken: csrfmiddlewaretoken,
+                    },
+                    dataType: 'html',
+                    success: function (data) {
+                        $.alert({
+                            title: 'Alert!',
+                            content: '成功',
+                        })
+                        $('.col-md-9').empty().append(data)
+                    }
+
+                })
+            })
+        })
+    </script>
+</head>
+<form class="form-horizontal" method="post" action="/insertEmpsInfo/">
+    <input type="hidden" name="csrfmiddlewaretoken" class="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    {#    {% csrf_token %}#}
+    <fieldset>
+        <div id="legend" class="">
+            <legend class="">员工信息</legend>
+        </div>
+        <div class="form-group">
+            <label for="firstname" class="col-sm-2 control-label">empno</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="empno" name="empno" placeholder="请输入..">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lastname" class="col-sm-2 control-label">ename</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="ename" name="ename" placeholder="请输入..">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="firstname" class="col-sm-2 control-label">job</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="job" name="job" placeholder="请输入..">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lastname" class="col-sm-2 control-label">mgr</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="mgr" name="mgr" placeholder="请输入..">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="firstname" class="col-sm-2 control-label">hiredate</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="hiredate" name="hiredate" placeholder="请输入..">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lastname" class="col-sm-2 control-label">sal</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="sal" name="sal" placeholder="请输入..">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="firstname" class="col-sm-2 control-label">comm</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="comm" name="comm" placeholder="请输入..">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lastname" class="col-sm-2 control-label">deptno</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="deptno" name="deptno" placeholder="请输入..">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-default" id="addButton">添加</button>
+            </div>
+        </div>
+
+    </fieldset>
+</form>
+</html>

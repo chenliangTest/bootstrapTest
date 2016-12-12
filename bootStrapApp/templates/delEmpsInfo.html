@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {#    <link href="{% static 'bootstrap/css/bootstrap.css' %}" type="text/css" rel="stylesheet">#}
+    {#    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet">#}
+    {#    <link href="{% static 'bootstrap/css/login.css' %}" type="text/css" rel="stylesheet">#}
+    {#    <link href="{% static 'bootstrap/css/jquery-confirm.min.css' %}" type="text/css" rel="stylesheet">#}
+    {#    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.js' %}"></script>#}
+    {#    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'bootstrap/js/jquery-3.1.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/jquery-confirm.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/custom/table.js' %}"></script>
+    <script type="text/javascript">
+        {#列表鼠标经过事件#}
+        tableLine()
+
+        $(function () {
+            $('.line').on('click', 'input', function () {
+                empno = $(this).parent().parent().find('[class=empno]').text()
+                $.ajax({
+                    type: 'GET',
+                    url: '/delEmpsInfo/',
+                    dataType: 'html',
+                    data: {
+                        empno: empno
+                    },
+                    success: function (data) {
+                        $('.col-md-9').empty().append(data)
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<table class="table">
+    <tbody>
+    <tr>
+        <th>empno</th>
+        <th>ename</th>
+        <th>job</th>
+        <th>mgr</th>
+        <th>hiredate</th>
+        <th>sal</th>
+        <th>comm</th>
+        <th>deptno</th>
+        <th>操作</th>
+    </tr>
+    {% for emp in emps %}
+        <tr class="line">
+            <td class="empno">{{ emp.empno }}</td>
+            <td>{{ emp.ename }}</td>
+            <td>{{ emp.job }}</td>
+            <td>{{ emp.mgr }}</td>
+            <td>{{ emp.hiredate }}</td>
+            <td>{{ emp.sal }}</td>
+            <td>{{ emp.comm }}</td>
+            <td>{{ emp.deptno }}</td>
+            <td><input type="button" id="delButton" value="删除"></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</html>

@@ -1,0 +1,264 @@
+{#{% extends 'head.html' %}#}
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="{% static 'bootstrap/css/bootstrap.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/login.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/jquery-confirm.min.css' %}" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/jquery-3.1.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/jquery-confirm.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/custom/table.js' %}"></script>
+
+    <script language="JavaScript">
+        $(function () {
+            {#菜单展示#}
+            $('.nav-header').click(function () {
+                {#判断当前点击对象兄弟元素是否展示#}
+                if ($(this).siblings('ul').hasClass('in')) {
+                    {#如果展示，再次点击隐藏其兄弟元素#}
+                    $(this).siblings('ul').removeClass('in')
+                } else {
+                    {#给当前点击对象，兄弟元素添加class 属性值 in，使其展示#}
+                    $(this).siblings('ul').addClass('in').end()
+                    {#隐藏其他展示元素#}
+                            .parent('li').siblings('li').children('ul').removeClass('in')
+                }
+            })
+
+
+            {#列表鼠标经过事件#}
+            tableLine()
+
+            {#查询员工信息#}
+            $('.selectEmpsInfo').click(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/selectEmpsInfo',
+                    dataType: 'text',
+                    data: {
+                        ename: 'aa',
+                        empno: 'bbbb'
+                    },
+
+                    success: function (data) {
+                        {#alert(JSON.parse(data)[0].fields['ename'])#}
+                        emps = JSON.parse(data)
+                        $('tr').remove('.line')
+                        $('.col-md-9').empty().append(
+                                '<table class="table">' +
+                                '<tbody>' +
+                                '<tr>' +
+                                '<th>empno</th>' +
+                                '<th>ename</th>' +
+                                '<th>job</th>' +
+                                '<th>mgr</th>' +
+                                '<th>hiredate</th>' +
+                                '<th>sal</th>' +
+                                '<th>comm</th>' +
+                                '<th>deptno</th>' +
+                                '</tr>' +
+                                '</tbody>' +
+                                '</table>'
+                        )
+                        $.each(emps, function (i) {
+                            emp = emps[i].fields
+                            pk_id = emps[i].pk
+                            $('tbody').last('tr').append(
+                                    '</tr>' +
+                                    '<tr class="line">' +
+                                    '<td>' + pk_id + '</td>' +
+                                    '<td>' + emp['ename'] + '</td>' +
+                                    '<td>' + emp['job'] + '</td>' +
+                                    '<td>' + emp['mgr'] + '</td>' +
+                                    '<td>' + emp['hiredate'] + '</td>' +
+                                    '<td>' + emp['sal'] + '</td>' +
+                                    '<td>' + emp['comm'] + '</td>' +
+                                    '<td>' + emp['deptno'] + '</td>' +
+                                    '<tr>'
+                            )
+                        })
+
+                        $('tr.line').off().on({
+                            mouseover: function () {
+                                if (!$(this).hasClass('selectline')) {
+                                    $(this).css('cursor', 'pointer').css('background', '#F5F5F5')
+                                }
+                            },
+
+                            mouseout: function () {
+                                if (!$(this).hasClass('selectline')) {
+                                    $(this).css('cursor', 'default').css('background', '')
+                                }
+                            },
+
+                            click: function () {
+                                if ($(this).hasClass('selectline')) {
+                                    $(this).removeClass('selectline').css('background', '')
+                                } else {
+                                    $(this).addClass('selectline').css('background', 'red')
+                                }
+                            }
+                        })
+                    }
+                })
+            })
+
+            {#新增员工#}
+            $('.insertInit').click(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/insertInit/',
+                    dataType: 'text',
+                    data: {
+                        ename: 'aa',
+                        empno: 'bbbb'
+                    },
+
+                    success: function (data) {
+                        $('.col-md-9').empty().append(data)
+                    }
+                })
+            })
+
+            {#删除员工初始化页面#}
+            $('.deleteInit').click(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/deleteInit/',
+                    dataType: 'html',
+                    data: {
+                        ename: 'aa',
+                        empno: 'bbbb'
+                    },
+                    success: function (data) {
+                        $('.col-md-9').empty().html(data)
+                    }
+                })
+            })
+
+
+        })
+    </script>
+</head>
+<body>
+<div class="container">
+    {% include 'head.html' %}
+    <div class="row clearfix">
+        <div class="col-md-3 column">
+            <div class="container-fluid">
+                <ul id="main-nav" class="main-nav nav nav-tabs nav-stacked" style="">
+                    <li>
+                        <a href="#menuSetting" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-credit-card"></i>
+                            员工信息维护
+                            <span class="pull-right glyphicon  glyphicon-chevron-toggle"></span>
+                        </a>
+                        <ul id="menuSetting" class="nav nav-list secondmenu collapse">
+                            <li class="selectEmpsInfo"><a href="#"><i class="glyphicon glyphicon-globe"></i>&nbsp;查询员工信息</a>
+                            </li>
+                            <li class="insertInit"><a href="#"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;新增员工信息</a>
+                            </li>
+                            <li><a href="#"><i class="glyphicon glyphicon-star"></i>&nbsp;修改员工信息</a></li>
+                            <li class="deleteInit"><a href="#"><i class="glyphicon glyphicon-text-width"></i>&nbsp;删除员工信息</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#configSetting" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-credit-card"></i>
+                            配置管理
+                            <span class="pull-right glyphicon  glyphicon-chevron-toggle"></span>
+                        </a>
+                        <ul id="configSetting" class="nav nav-list secondmenu collapse">
+                            <li class=""><a href="#"><i class="glyphicon glyphicon-globe"></i>&nbsp;全局缺省配置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;未开通用户配置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-star"></i>&nbsp;退订用户配置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-text-width"></i>&nbsp;试用用户配置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-ok-circle"></i>&nbsp;开通用户配置</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#systemSetting" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-cog"></i>
+                            系统管理
+                            <span class="pull-right glyphicon glyphicon-chevron-toggle"></span>
+                        </a>
+                        <ul id="systemSetting" class="nav nav-list secondmenu collapse">
+                            <li><a href="#"><i class="glyphicon glyphicon-user"></i>&nbsp;用户管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-th-list"></i>&nbsp;菜单管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-asterisk"></i>&nbsp;角色管理</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-edit"></i>&nbsp;修改密码</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-eye-open"></i>&nbsp;日志查看</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#disSetting" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-globe"></i>
+                            分发配置
+                            <span class="pull-right glyphicon glyphicon-chevron-toggle"></span>
+                        </a>
+                        <ul id="disSetting" class="nav nav-list secondmenu collapse">
+                            <li><a href="#"><i class="glyphicon glyphicon-th-list"></i>&nbsp;分发包配置</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#dicSetting" class="nav-header collapsed" data-toggle="collapse">
+                            <i class="glyphicon glyphicon-bold"></i>
+                            字典配置
+                            <span class="pull-right glyphicon glyphicon-chevron-toggle"></span>
+                        </a>
+                        <ul id="dicSetting" class="nav nav-list secondmenu collapse">
+                            <li><a href="#"><i class="glyphicon glyphicon-text-width"></i>&nbsp;关键字配置</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="glyphicon glyphicon-fire"></i>
+                            关于系统
+                            <span class="badge pull-right">1</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 column">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th>empno</th>
+                    <th>ename</th>
+                    <th>job</th>
+                    <th>mgr</th>
+                    <th>hiredate</th>
+                    <th>sal</th>
+                    <th>comm</th>
+                    <th>deptno</th>
+                </tr>
+                {% for emp in emps %}
+                    <tr class="line">
+                        <td>{{ emp.empno }}</td>
+                        <td>{{ emp.ename }}</td>
+                        <td>{{ emp.job }}</td>
+                        <td>{{ emp.mgr }}</td>
+                        <td>{{ emp.hiredate }}</td>
+                        <td>{{ emp.sal }}</td>
+                        <td>{{ emp.comm }}</td>
+                        <td>{{ emp.deptno }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

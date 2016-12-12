@@ -1,0 +1,56 @@
+.secondmenu a {
+    font-size: 12px;
+    color: #4A515B;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.secondmenu > li > a:hover {
+    background-color: #F5F5F5;
+    border-color: #428bca;
+    color: #fff;
+}
+
+.secondmenu li.active {
+    background-color: #6f7782;
+    border-color: #428bca;
+    border-radius: 4px;
+}
+
+.secondmenu li.active > a {
+    color: #ffffff;
+}
+
+.navbar-static-top {
+    background-color: #212121;
+    margin-bottom: 5px;
+}
+
+.navbar-brand {
+    /*background: url('http://static-res.ruyo.net/ruyo_net_w_32.png') no-repeat 10px 8px;*/
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 50px;
+    color: #fff;
+}
+
+.navbar-brand:hover {
+    color: #fff;
+}
+
+.collapse.glyphicon-chevron-toggle, .glyphicon-chevron-toggle:before {
+    content: "\e113";
+}
+
+.collapsed.glyphicon-chevron-toggle:before {
+    content: "\e114";
+}
+
+.main-nav.nav-tabs.nav-stacked > li {
+    margin-bottom: 4px;
+}
+
+.main-nav.nav-tabs.nav-stacked > li > a > span {
+    color: #4A515B;
+}
+
